@@ -1,0 +1,170 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Profile - CattleCare{% endblock %}
+
+{% block content %}
+<div class="flex">
+    <!-- Sidebar (same as dashboard) -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
+        <div class="flex flex-col h-full">
+            <div class="flex items-center gap-2 px-6 py-4 border-b border-gray-700">
+                <i class="fas fa-cow text-primary text-2xl"></i>
+                <span class="font-bold text-xl text-white">CattleCare</span>
+            </div>
+
+            <nav class="flex-1 px-4 py-6 overflow-y-auto">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 transition">
+                            <i class="fas fa-th-large"></i>
+                            <span data-translate="nav_dashboard">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'cattle_list' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 transition">
+                            <i class="fas fa-cow"></i>
+                            <span data-translate="cow_list_title">Cattle List</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'articles' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 transition">
+                            <i class="fas fa-newspaper"></i>
+                            <span data-translate="nav_articles">Articles</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'user_data' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 transition">
+                            <i class="fas fa-database"></i>
+                            <span data-translate="user_data_title">User Data</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'profile' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary text-white">
+                            <i class="fas fa-user-circle"></i>
+                            <span data-translate="nav_profile">Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="px-4 py-4 border-t border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-gray-300"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-white text-sm font-medium">{{ user.first_name|default:"Rajesh Kumar" }}</p>
+                        <p class="text-gray-400 text-xs">Farmer</p>
+                    </div>
+                    <a href="{% url 'logout' %}" class="text-gray-400 hover:text-white transition">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 md:ml-64">
+        <!-- Top Bar -->
+        <header class="bg-white shadow-sm sticky top-0 z-40">
+            <div class="flex items-center justify-between px-4 md:px-8 py-4">
+                <div class="flex items-center gap-4">
+                    <button id="sidebarToggle" class="md:hidden text-gray-600">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <h1 class="text-xl font-bold text-dark" data-translate="profile_title">My Profile</h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <select id="languageSwitcher" class="bg-gray-100 border-0 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary cursor-pointer">
+                        <option value="en">English</option>
+                        <option value="hi">हिंदी</option>
+                        <option value="mr">मराठी</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <!-- Profile Content -->
+        <div class="p-4 md:p-8">
+            <!-- Profile Header -->
+            <div class="bg-white rounded-xl shadow-sm p-6 md:p-8 mb-6">
+                <div class="flex flex-col md:flex-row items-center gap-6">
+                    <div class="relative">
+                        <div class="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-4xl text-gray-400"></i>
+                        </div>
+                        <button class="absolute bottom-0 right-0 bg-primary text-white rounded-full p-3 hover:bg-primary-dark transition">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                    </div>
+                    <div class="flex-1 text-center md:text-left">
+                        <h2 class="text-2xl font-bold text-dark">{{ user.first_name|default:"Rajesh" }} {{ user.last_name|default:"Kumar" }}</h2>
+                        <p class="text-gray-600">{{ user.email }}</p>
+                        <div class="mt-4 flex gap-3 justify-center md:justify-start">
+                            <a href="#" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition">Edit Profile</a>
+                            <a href="#" class="bg-gray-200 text-dark px-6 py-2 rounded-lg hover:bg-gray-300 transition">Change Password</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Form -->
+            <div class="bg-white rounded-xl shadow-sm p-6 md:p-8">
+                <h3 class="text-xl font-bold text-dark mb-6">Profile Information</h3>
+                <form method="POST" action="{% url 'profile' %}">
+                    {% csrf_token %}
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">First Name</label>
+                            <input type="text" name="first_name" value="{{ user.first_name }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">Last Name</label>
+                            <input type="text" name="last_name" value="{{ user.last_name }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">Email</label>
+                            <input type="email" name="email" value="{{ user.email }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">Phone</label>
+                            <input type="tel" name="phone_number" value="{{ profile.phone_number }}|{{ profile.phone_number }}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition">
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <button type="submit" class="bg-primary text-white px-8 py-3 rounded-lg font-medium hover:bg-primary-dark transition">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Sidebar Overlay -->
+<div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/translations.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+<script>
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('-translate-x-full');
+        sidebarOverlay.classList.toggle('hidden');
+    });
+
+    sidebarOverlay.addEventListener('click', () => {
+        sidebar.classList.add('-translate-x-full');
+        sidebarOverlay.classList.add('hidden');
+    });
+</script>
+{% endblock %}
+

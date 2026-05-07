@@ -1,0 +1,66 @@
+/* Custom Tailwind CSS Configuration */
+:root {
+  --primary: #22c55e;
+  --primary-dark: #16a34a;
+  --secondary: #f0fdf4;
+  --accent: #15803d;
+  --light: #f8fafc;
+  --dark: #1e293b;
+}
+
+/* Hero Gradient */
+.hero-gradient {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+}
+
+/* Custom Button Styles */
+.btn-primary {
+  @apply bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition;
+}
+
+.btn-secondary {
+  @apply bg-gray-100 text-slate-900 px-4 py-2 rounded-lg hover:bg-gray-200 transition;
+}
+
+/* Utility Classes */
+.text-primary {
+  color: #22c55e;
+}
+
+.bg-primary {
+  background-color: #22c55e;
+}
+
+.hover\:bg-primary-dark:hover {
+  background-color: #16a34a;
+}
+
+/* Animation Classes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .hidden.md\:hidden {
+    display: block;
+  }
+}

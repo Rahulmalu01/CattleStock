@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}About - CattleCare{% endblock %}
+
+{% block content %}
+<section class="py-20 bg-gradient-to-br from-green-100 via-white to-blue-100 dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950 transition-all duration-500 text-center">
+    <div class="max-w-4xl mx-auto px-4">
+        <div class="inline-flex items-center gap-2 bg-white dark:bg-gray-800 shadow-md px-5 py-2 rounded-full mb-6">
+            <span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
+            <span class="text-sm text-gray-700 dark:text-gray-300">Smart Farming Technology</span>
+        </div>
+        <h1 class="text-4xl md:text-6xl font-extrabold mb-6">
+            <span class="text-gray-900 dark:text-white">About</span>
+            <span class="bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 bg-clip-text text-transparent">CattleCare</span>
+        </h1>
+        <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">Revolutionizing cattle health management through IoT, artificial intelligence, and real-time monitoring systems for smarter and healthier farming.</p>
+    </div>
+</section>
+<section class="py-20 bg-white dark:bg-gray-900 transition-all duration-500">
+    <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-16 items-center">
+        <div>
+            <div class="inline-block bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-4 py-2 rounded-full text-sm font-medium mb-5">Our Mission</div>
+            <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-6">Smart Technology For Modern Farming</h2>
+            <p class="text-gray-600 dark:text-gray-300 text-lg leading-relaxed mb-8">We empower farmers with intelligent IoT-based cattle monitoring systems that improve livestock health, productivity, and farm efficiency.</p>
+            <div class="space-y-5">
+                <div class="flex items-start gap-4 bg-gray-50 dark:bg-gray-800 p-5 rounded-2xl shadow-sm hover:shadow-lg transition">
+                    <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-heartbeat text-primary text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg text-gray-900 dark:text-white">Real-Time Health Tracking</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Monitor heart rate, temperature, and cattle activities instantly.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 bg-gray-50 dark:bg-gray-800 p-5 rounded-2xl shadow-sm hover:shadow-lg transition">
+                    <div class="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-bell text-red-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg text-gray-900 dark:text-white">Smart Alerts</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Receive immediate notifications during health emergencies.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 bg-gray-50 dark:bg-gray-800 p-5 rounded-2xl shadow-sm hover:shadow-lg transition">
+                    <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-chart-line text-blue-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg text-gray-900 dark:text-white">Advanced Analytics</h3>
+                        <p class="text-gray-600 dark:text-gray-400">AI-powered insights to improve livestock productivity.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="relative">
+            <div class="absolute inset-0 bg-gradient-to-r from-green-400 to-blue-500 blur-3xl opacity-20 rounded-full"></div>
+            <img src="{% static 'images/farm.png' %}" class="relative rounded-3xl shadow-2xl w-full h-[450px] object-cover border-4 border-white dark:border-gray-800">
+        </div>
+    </div>
+</section>
+<section class="py-20 bg-gray-50 dark:bg-gray-950 transition-all duration-500">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Why Choose Us?</h2>
+            <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Smart solutions designed to improve cattle health management and productivity.</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-lg hover:-translate-y-2 hover:shadow-2xl transition-all border border-gray-100 dark:border-gray-800">
+                <div class="w-16 h-16 bg-gradient-to-r from-green-400 to-green-600 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fas fa-microchip text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Smart IoT Devices</h3>
+                <p class="text-gray-600 dark:text-gray-400">Advanced IoT sensors ensure accurate and real-time cattle monitoring.</p>
+            </div>
+            <div class="bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-lg hover:-translate-y-2 hover:shadow-2xl transition-all border border-gray-100 dark:border-gray-800">
+                <div class="w-16 h-16 bg-gradient-to-r from-red-400 to-pink-500 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fas fa-bell text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Instant Alerts</h3>
+                <p class="text-gray-600 dark:text-gray-400">Receive emergency notifications whenever abnormal conditions occur.</p>
+            </div>
+            <div class="bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-lg hover:-translate-y-2 hover:shadow-2xl transition-all border border-gray-100 dark:border-gray-800">
+                <div class="w-16 h-16 bg-gradient-to-r from-blue-400 to-indigo-600 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fas fa-chart-line text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Smart Analytics</h3>
+                <p class="text-gray-600 dark:text-gray-400">Powerful data insights help improve farm efficiency and productivity.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="py-20 bg-white dark:bg-gray-900 transition-all duration-500">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+        <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Meet Our Team</h2>
+        <p class="text-gray-600 dark:text-gray-400 mb-14 max-w-2xl mx-auto">Passionate innovators building the future of smart livestock management.</p>
+        <div class="grid md:grid-cols-3 gap-10">
+            {% for member in team %}
+            <div class="bg-gradient-to-br from-white to-green-50 dark:from-gray-800 dark:to-gray-900 rounded-3xl shadow-lg hover:-translate-y-3 hover:shadow-2xl transition-all duration-300 p-8 border border-gray-100 dark:border-gray-700">
+                <div class="relative w-28 h-28 mx-auto mb-6">
+                    <div class="absolute inset-0 bg-gradient-to-r from-green-400 to-blue-500 rounded-full blur-lg opacity-30"></div>
+                    <img src="{{ member.image.url }}" class="relative w-28 h-28 rounded-full object-cover border-4 border-white dark:border-gray-700 shadow-lg">
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">{{ member.name }}</h3>
+                <p class="text-primary font-medium">{{ member.position }}</p>
+            </div>
+            {% empty %}
+            <p class="col-span-3 text-gray-500 dark:text-gray-400">Team data not available</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

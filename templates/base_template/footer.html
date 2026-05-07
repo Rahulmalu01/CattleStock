@@ -1,0 +1,130 @@
+{% load static %}
+<footer class="bg-gradient-to-br from-gray-900 via-gray-950 to-black text-white pt-16 pb-8 border-t border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-12">
+            <div>
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-12 h-12 bg-gradient-to-r from-green-400 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg">
+                        <i class="fas fa-cow text-white text-2xl"></i>
+                    </div>
+                    <div>
+                        <span class="font-extrabold text-2xl bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">CattleCare</span>
+                    </div>
+                </div>
+                <p class="text-gray-400 leading-relaxed mb-6" data-translate="footer_desc">Smart cattle health monitoring platform designed for modern farmers using IoT and AI technology.</p>
+                <div class="flex gap-4">
+                    <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-green-500 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-blue-500 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-pink-500 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-blue-700 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-bold text-xl mb-6 text-white" data-translate="footer_links">Quick Links</h4>
+                <ul class="space-y-4">
+                    <li>
+                        <a href="{% url 'home' %}" class="text-gray-400 hover:text-green-400 transition flex items-center gap-2">
+                            <i class="fas fa-angle-right text-sm"></i>
+                            <span data-translate="nav_home">Home</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'about' %}" class="text-gray-400 hover:text-green-400 transition flex items-center gap-2">
+                            <i class="fas fa-angle-right text-sm"></i>
+                            <span data-translate="nav_about">About</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'home' %}" class="text-gray-400 hover:text-green-400 transition flex items-center gap-2">
+                            <i class="fas fa-angle-right text-sm"></i>
+                            <span data-translate="nav_articles">Articles</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'contact' %}" class="text-gray-400 hover:text-green-400 transition flex items-center gap-2">
+                            <i class="fas fa-angle-right text-sm"></i>
+                            <span data-translate="nav_contact">Contact</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-xl mb-6 text-white" data-translate="footer_account">Account</h4>
+                <ul class="space-y-4">
+                    <li>
+                        <a href="{% url 'login' %}" class="text-gray-400 hover:text-blue-400 transition flex items-center gap-2">
+                            <i class="fas fa-user text-sm"></i>
+                            <span data-translate="nav_login">Login</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'signup' %}" class="text-gray-400 hover:text-blue-400 transition flex items-center gap-2">
+                            <i class="fas fa-user-plus text-sm"></i>
+                            <span data-translate="nav_register">Register</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'home' %}" class="text-gray-400 hover:text-blue-400 transition flex items-center gap-2">
+                            <i class="fas fa-chart-line text-sm"></i>
+                            <span data-translate="nav_dashboard">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'home' %}" class="text-gray-400 hover:text-blue-400 transition flex items-center gap-2">
+                            <i class="fas fa-id-badge text-sm"></i>
+                            <span data-translate="nav_profile">Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-xl mb-6 text-white" data-translate="footer_contact">Contact Us</h4>
+                <div class="space-y-5">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-envelope text-white"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-400">info@cattlecare.com</p>
+                            <p class="text-gray-500 text-sm">support@cattlecare.com</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-gradient-to-r from-green-400 to-green-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-phone text-white"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-400">+91 98765 43210</p>
+                            <p class="text-gray-500 text-sm">Mon - Sat, 9AM - 6PM</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-gradient-to-r from-blue-400 to-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-map-marker-alt text-white"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-400">Maharashtra, India</p>
+                            <p class="text-gray-500 text-sm">Pune Region</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-800 mt-14 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-gray-500 text-sm text-center md:text-left">© 2026 CattleCare. All rights reserved.</p>
+            <div class="flex items-center gap-6 text-sm">
+                <a href="#" class="text-gray-500 hover:text-green-400 transition">Privacy Policy</a>
+                <a href="#" class="text-gray-500 hover:text-green-400 transition">Terms of Service</a>
+                <a href="#" class="text-gray-500 hover:text-green-400 transition">Support</a>
+            </div>
+        </div>
+    </div>
+</footer>
