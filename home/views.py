@@ -4,14 +4,13 @@ from .models import TeamMember
 from .models import Contact
 
 def home(request):
-    return render(request, 'home/index.html')
+    context = {}
+    return render(request, 'home/index.html', context)
 
 def about(request):
     team = TeamMember.objects.all()
     context = {
-        'page_title': 'About Us',
         'team': team,
-        'current_page': 'about',
     }
     return render(request, 'home/about.html', context)
 

@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
+AUTH_USER_MODEL = 'accounts.Account'
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,8 +37,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    #Personal App
     'home',
-    'account',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +61,7 @@ TEMPLATES = [
         "DIRS": [
             BASE_DIR / 'templates',
             BASE_DIR / 'home' / 'templates',
-            BASE_DIR / 'account' / 'templates',
+            BASE_DIR / 'accounts' / 'templates',
         ],
         "APP_DIRS": True,
         "OPTIONS": {
