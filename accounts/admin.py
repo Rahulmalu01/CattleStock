@@ -1,4 +1,16 @@
 from django.contrib import admin
-from accounts.models import Account
+from .models import Account
 
-admin.site.register(Account)
+@admin.register(Account)
+class AccountAdmin(admin.ModelAdmin):
+    list_display = (
+        'email',
+        'username',
+        'role',
+        'approver_post',
+        'is_staff',
+    )
+    search_fields = (
+        'email',
+        'username',
+    )

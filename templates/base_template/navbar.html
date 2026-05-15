@@ -14,6 +14,7 @@
                 <a href="{% url 'home' %}" class="relative text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-green-400 transition font-medium {% if current_page == 'home' %}text-primary dark:text-green-400{% endif %}">Home</a>
                 <a href="{% url 'about' %}" class="relative text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-green-400 transition font-medium {% if current_page == 'about' %}text-primary dark:text-green-400{% endif %}">About</a>
                 <a href="{% url 'contact' %}" class="relative text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-green-400 transition font-medium {% if current_page == 'contact' %}text-primary dark:text-green-400{% endif %}">Contact</a>
+                <a href="{% url 'articles' %}" class="relative text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-green-400 transition font-medium {% if current_page == 'contact' %}text-primary dark:text-green-400{% endif %}">Articles</a>
             </div>
             <div class="hidden md:flex items-center gap-4">
                 {% if user.is_authenticated %}

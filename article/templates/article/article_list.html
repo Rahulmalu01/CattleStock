@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Articles{% endblock %}
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950 py-16 px-4 transition-all duration-300">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-14">
+            <div>
+                <h1 class="text-5xl font-extrabold text-gray-900 dark:text-white mb-3">
+                    Articles
+                </h1>
+                <p class="text-gray-600 dark:text-gray-400 text-lg">
+                    Explore smart farming and cattle health insights
+                </p>
+            </div>
+            <a href="{% url 'create_article' %}"
+               class="bg-gradient-to-r from-green-500 to-green-700 hover:scale-105 transition-all duration-300 text-white px-8 py-4 rounded-2xl shadow-2xl font-semibold text-lg">
+                <i class="fas fa-plus mr-2"></i>
+                Create Article
+            </a>
+        </div>
+        <form method="GET" class="mb-14">
+            <div class="flex flex-col md:flex-row gap-4">
+                <input type="text"
+                       name="q"
+                       placeholder="Search articles..."
+                       class="w-full px-6 py-4 rounded-2xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-green-500 shadow-lg">
+                <button type="submit"
+                        class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-2xl shadow-lg font-semibold">
+                    Search
+                </button>
+            </div>
+        </form>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {% for article in articles %}
+            <div class="bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-2xl hover:-translate-y-3 hover:shadow-green-200 dark:hover:shadow-green-900/30 transition-all duration-500 border border-gray-100 dark:border-gray-700">
+                {% if article.image %}
+                <img src="{{ article.image }}"
+                     class="w-full h-60 object-cover">
+                {% else %}
+                <div class="w-full h-60 bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center">
+                    <i class="fas fa-newspaper text-white text-6xl"></i>
+                </div>
+                {% endif %}
+                <div class="p-7">
+                    <div class="flex items-center justify-between mb-5">
+                        <span class="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-4 py-2 rounded-full text-sm font-semibold">
+                            {{ article.category }}
+                        </span>
+                        <span class="text-gray-500 dark:text-gray-400 text-sm">
+                            {{ article.author }}
+                        </span>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 leading-snug">
+                        {{ article.title }}
+                    </h2>
+                    <p class="text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3 mb-6">
+                        {{ article.content|truncatewords:25 }}
+                    </p>
+                    {% if article.article_tags %}
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        {% for tag in article.article_tags %}
+                        <span class="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-xs font-medium">
+                            #{{ tag }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if article.status == 'approved' %}
+                    <div class="mb-5">
+                        <span class="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-3 py-1 rounded-full text-xs font-semibold">
+                            Approved
+                        </span>
+                    </div>
+                    {% endif %}
+                    <div class="flex items-center justify-between">
+                        <a href="{% url 'article_detail' article.id %}"
+                           class="text-green-600 dark:text-green-400 font-bold hover:text-green-700 dark:hover:text-green-300 transition">
+                            Read More →
+                        </a>
+                        <div class="flex items-center gap-4 text-gray-500 dark:text-gray-400 text-sm">
+                            <span>
+                                <i class="fas fa-heart text-red-500 mr-1"></i>
+                                {{ article.likes|default:'0' }}
+                            </span>
+                            <span>
+                                <i class="fas fa-comments text-blue-500 mr-1"></i>
+                                {{ article.comments|default:'0' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full">
+                <div class="bg-white dark:bg-gray-800 rounded-3xl p-16 shadow-2xl text-center">
+                    <i class="fas fa-newspaper text-7xl text-gray-300 dark:text-gray-600 mb-8"></i>
+                    <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                        No Articles Found
+                    </h2>
+                    <p class="text-gray-500 dark:text-gray-400 text-lg mb-8">
+                        No approved articles available right now.
+                    </p>
+                    <a href="{% url 'create_article' %}"
+                       class="inline-block bg-gradient-to-r from-green-500 to-green-700 text-white px-8 py-4 rounded-2xl shadow-xl font-semibold">
+                        Create First Article
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

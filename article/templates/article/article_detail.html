@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block meta_description %}
+{{ article.meta_description }}
+{% endblock %}
+
+{% block content %}
+<section class="relative py-20 bg-gradient-to-br from-green-100 via-white to-blue-100 dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950 overflow-hidden">
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute top-10 left-10 w-72 h-72 bg-green-400 opacity-20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-10 right-10 w-72 h-72 bg-blue-500 opacity-20 rounded-full blur-3xl"></div>
+    </div>
+    <div class="relative max-w-6xl mx-auto px-4">
+        <div class="flex flex-wrap items-center gap-4 mb-6">
+            <span class="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-5 py-2 rounded-full font-semibold text-sm">{{ article.category }}</span>
+            <span class="text-gray-500 dark:text-gray-400 text-sm">
+                <i class="fas fa-calendar-alt mr-2"></i>{{ article.created_at }}</span>
+        </div>
+        <h1 class="text-4xl md:text-6xl font-extrabold leading-tight text-gray-900 dark:text-white mb-8">{{ article.title }}</h1>
+        <div class="flex flex-wrap items-center gap-5 mb-10">
+            <div class="w-14 h-14 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center text-white text-xl font-bold">{{ article.author|first|upper }}</div>
+            <div>
+                <h3 class="font-bold text-gray-900 dark:text-white text-lg">{{ article.author }}</h3>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">Author</p>
+            </div>
+            {% if article.approved_by %}
+            <div class="ml-auto bg-white dark:bg-gray-800 shadow-lg px-5 py-3 rounded-2xl border border-gray-200 dark:border-gray-700">
+                <p class="text-sm text-gray-500 dark:text-gray-400">Approved By</p>
+                <h4 class="font-bold text-gray-900 dark:text-white">{{ article.approved_by }}</h4>
+                <p class="text-green-600 text-sm">{{ article.approver_post }}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% if article.image %}
+            <img src="{{ article.image }}" class="w-full h-[500px] object-cover rounded-3xl shadow-2xl border-4 border-white dark:border-gray-800">
+        {% endif %}
+    </div>
+</section>
+<section class="py-20 bg-white dark:bg-gray-900 transition-all duration-300">
+    <div class="max-w-5xl mx-auto px-4">
+        <div class="flex flex-wrap gap-4 mb-14">
+            <a href="{% url 'toggle_like' article._id %}" class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-2xl shadow-lg flex items-center gap-3 hover:scale-105 transition-all duration-300">
+                <i class="fas fa-heart"></i>
+                <span>Like</span>
+            </a>
+            <a href="{% url 'toggle_bookmark' article._id %}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-2xl shadow-lg flex items-center gap-3 hover:scale-105 transition-all duration-300">
+                <i class="fas fa-bookmark"></i>
+                <span>Bookmark</span>
+            </a>
+            <button onclick="copyArticleLink()" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-2xl shadow-lg flex items-center gap-3 hover:scale-105 transition-all duration-300">
+                <i class="fas fa-share-alt"></i>
+                <span>Share</span>
+            </button>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+            <div class="bg-gray-100 dark:bg-gray-800 rounded-3xl p-6 text-center shadow-lg">
+                <i class="fas fa-heart text-red-500 text-2xl mb-3"></i>
+                <h3 class="text-3xl font-bold text-gray-900 dark:text-white">{{ likes_count }}</h3>
+                <p class="text-gray-500 dark:text-gray-400">Likes</p>
+            </div>
+            <div class="bg-gray-100 dark:bg-gray-800 rounded-3xl p-6 text-center shadow-lg">
+                <i class="fas fa-comments text-blue-500 text-2xl mb-3"></i>
+                <h3 class="text-3xl font-bold text-gray-900 dark:text-white">{{ comments|length }}</h3>
+                <p class="text-gray-500 dark:text-gray-400">Comments</p>
+            </div>
+            <div class="bg-gray-100 dark:bg-gray-800 rounded-3xl p-6 text-center shadow-lg">
+                <i class="fas fa-eye text-green-500 text-2xl mb-3"></i>
+                <h3 class="text-3xl font-bold text-gray-900 dark:text-white">1.2K</h3>
+                <p class="text-gray-500 dark:text-gray-400">Views</p>
+            </div>
+            <div class="bg-gray-100 dark:bg-gray-800 rounded-3xl p-6 text-center shadow-lg">
+                <i class="fas fa-clock text-purple-500 text-2xl mb-3"></i>
+                <h3 class="text-3xl font-bold text-gray-900 dark:text-white">5 min</h3>
+                <p class="text-gray-500 dark:text-gray-400">Read</p>
+            </div>
+        </div>
+        <article class="prose prose-lg dark:prose-invert max-w-none">
+            <div class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line text-lg">{{ article.content }}</div>
+        </article>
+        {% if article.article_tags %}
+        <div class="mt-16">
+            <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">Tags</h3>
+            <div class="flex flex-wrap gap-3">
+                {% for tag in article.article_tags %}
+                    <span class="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-5 py-2 rounded-full font-medium">#{{ tag }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% if user.username == article.author %}
+        <div class="flex gap-4 mt-16">
+            <a href="{% url 'edit_article' article._id %}"class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-2xl shadow-lg">Edit Article</a>
+            <a href="{% url 'user_delete_article' article._id %}"class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-2xl shadow-lg">Delete Article</a>
+        </div>
+        {% endif %}
+        <div class="mt-24">
+            <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-12">Comments</h2>
+            {% if user.is_authenticated %}
+            <form method="POST"action="{% url 'add_comment' article._id %}"class="bg-gray-100 dark:bg-gray-800 p-8 rounded-3xl shadow-2xl mb-16">
+                {% csrf_token %}
+                <textarea name="comment"rows="5"class="w-full px-6 py-5 rounded-2xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-green-500 resize-none"placeholder="Write your comment..."required></textarea>
+                <button type="submit"class="mt-6 bg-gradient-to-r from-green-500 to-green-700 hover:scale-105 transition-all duration-300 text-white px-8 py-4 rounded-2xl font-semibold shadow-xl">Post Comment</button>
+            </form>
+            {% else %}
+            <div class="bg-yellow-100 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300 p-6 rounded-2xl mb-10">Please login to comment on this article.</div>
+            {% endif %}
+            <div class="space-y-8">
+                {% for comment in comments %}
+                <div class="bg-gray-100 dark:bg-gray-800 rounded-3xl p-8 shadow-xl">
+                    <div class="flex items-center justify-between mb-5">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold">{{ comment.username|first|upper }}</div>
+                            <div>
+                                <h3 class="font-bold text-gray-900 dark:text-white">{{ comment.username }}</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">{{ comment.created_at }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">{{ comment.comment }}</p>
+                </div>
+                {% empty %}
+                <div class="bg-gray-100 dark:bg-gray-800 rounded-3xl p-12 text-center shadow-xl">
+                    <i class="fas fa-comments text-5xl text-gray-400 mb-6"></i>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">No Comments Yet</h3>
+                    <p class="text-gray-500 dark:text-gray-400">Be the first person to comment on this article.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+function copyArticleLink() {
+    navigator.clipboard.writeText(window.location.href);
+    alert("Article link copied successfully!");
+}
+</script>
+{% endblock %}

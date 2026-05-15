@@ -62,3 +62,5 @@ htmlcov/
 *.bak
 .AppleDouble
 .LSOverride
+
+userinfo.txt

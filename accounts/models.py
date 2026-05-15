@@ -24,15 +24,25 @@ class MyAccountManager(BaseUserManager):
         user.is_admin = True
         user.is_staff = True
         user.is_superuser = True
+        user.role = 'admin'
         user.save(using=self._db)
         return user
 
 class Account(AbstractBaseUser, PermissionsMixin):
+    ROLE_CHOICES = (
+        ('user', 'User'),
+        ('author', 'Author'),
+        ('moderator', 'Moderator'),
+        ('manager', 'Manager'),
+        ('admin', 'Admin'),
+    )
     email = models.EmailField(max_length=60, unique=True)
     username = models.CharField(max_length=30, primary_key=True)
     name = models.CharField(max_length=60)
     phone = models.CharField(max_length=15)
     location = models.CharField(max_length=100)
+    role = models.CharField(max_length=20,choices=ROLE_CHOICES,default='user')
+    approver_post = models.CharField(max_length=100,blank=True,null=True)
     email_verified = models.BooleanField(default=False)
     phone_verified = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
