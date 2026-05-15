@@ -14,7 +14,10 @@
                 <a href="{% url 'home' %}" class="relative text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-green-400 transition font-medium {% if current_page == 'home' %}text-primary dark:text-green-400{% endif %}">Home</a>
                 <a href="{% url 'about' %}" class="relative text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-green-400 transition font-medium {% if current_page == 'about' %}text-primary dark:text-green-400{% endif %}">About</a>
                 <a href="{% url 'contact' %}" class="relative text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-green-400 transition font-medium {% if current_page == 'contact' %}text-primary dark:text-green-400{% endif %}">Contact</a>
-                <a href="{% url 'articles' %}" class="relative text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-green-400 transition font-medium {% if current_page == 'contact' %}text-primary dark:text-green-400{% endif %}">Articles</a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'articles' %}" class="relative text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-green-400 transition font-medium {% if current_page == 'article' %}text-primary dark:text-green-400{% endif %}">Articles</a>
+                <a href="{% url 'cattle_dashboard' %}" class="relative text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-green-400 transition font-medium {% if current_page == 'dashboard' %}text-primary dark:text-green-400{% endif %}">Dashboard</a>
+                {% endif %}
             </div>
             <div class="hidden md:flex items-center gap-4">
                 {% if user.is_authenticated %}
@@ -30,10 +33,6 @@
                         <a href="{% url 'profile' %}" class="flex items-center gap-3 px-5 py-4 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition">
                             <i class="fas fa-user-circle text-primary"></i>
                             <span>Profile</span>
-                        </a>
-                        <a href="" class="flex items-center gap-3 px-5 py-4 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition">
-                            <i class="fas fa-chart-line text-blue-500"></i>
-                            <span>Dashboard</span>
                         </a>
                         <form method="POST" action="{% url 'logout' %}">
                             {% csrf_token %}
@@ -59,6 +58,8 @@
             <a href="{% url 'home' %}" class="block text-gray-700 dark:text-gray-300 font-medium">Home</a>
             <a href="{% url 'about' %}" class="block text-gray-700 dark:text-gray-300 font-medium">About</a>
             <a href="{% url 'contact' %}" class="block text-gray-700 dark:text-gray-300 font-medium">Contact</a>
+            <a href="{% url 'articles' %}" class="block text-gray-700 dark:text-gray-300 font-medium">Article</a>
+            <a href="{% url 'cattle_dashboard' %}" class="block text-gray-700 dark:text-gray-300 font-medium">Dashboard</a>
             <div class="pt-5 border-t border-gray-200 dark:border-gray-800">
                 {% if user.is_authenticated %}
                 <a href="{% url 'profile' %}" class="block mb-4 text-gray-700 dark:text-gray-300">Profile</a>

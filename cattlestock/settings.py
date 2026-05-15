@@ -50,12 +50,13 @@ INSTALLED_APPS = [
 
     #Inbuild functions
     'rest_framework',
-    
+
     #Personal App
     'home',
     'accounts',
     'hardware',
-    'article'
+    'article',
+    'cattle_manager',
 ]
 
 MIDDLEWARE = [

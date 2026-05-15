@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Cattle Dashboard{% endblock %}
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950 py-10 px-4 transition-all duration-300">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-12">
+            <div>
+                <h1 class="text-5xl font-extrabold text-gray-900 dark:text-white mb-3">Smart Cattle Dashboard</h1>
+                <p class="text-lg text-gray-600 dark:text-gray-400">Monitor cattle health, activity, and farm performance in real-time.</p>
+            </div>
+            <div class="flex gap-4">
+                <a href="{% url 'add_cattle' %}" class="bg-gradient-to-r from-green-500 to-green-700 text-white px-6 py-4 rounded-2xl shadow-2xl hover:scale-105 transition-all duration-300 font-semibold">
+                    <i class="fas fa-plus-circle mr-2"></i>
+                    Add Cattle
+                </a>
+                <a href="{% url 'cattle_list' %}" class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-6 py-4 rounded-2xl shadow-xl hover:scale-105 transition-all duration-300 font-semibold">
+                    <i class="fas fa-cow mr-2"></i>
+                    View Cattle
+                </a>
+            </div>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-14">
+            <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl border border-green-100 dark:border-gray-700 hover:-translate-y-2 transition-all duration-300">
+                <div class="flex justify-between items-center mb-5">
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400 mb-2">Total Cattle</p>
+                        <h2 class="text-5xl font-extrabold text-green-600">{{ total_cattle }}</h2>
+                    </div>
+                    <div class="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-2xl flex items-center justify-center">
+                        <i class="fas fa-cow text-green-600 text-3xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl border border-green-100 dark:border-gray-700 hover:-translate-y-2 transition-all duration-300">
+                <div class="flex justify-between items-center mb-5">
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400 mb-2">Healthy</p>
+                        <h2 class="text-5xl font-extrabold text-green-500">{{ healthy }}</h2>
+                    </div>
+                    <div class="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-2xl flex items-center justify-center">
+                        <i class="fas fa-heartbeat text-green-500 text-3xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl border border-yellow-100 dark:border-gray-700 hover:-translate-y-2 transition-all duration-300">
+                <div class="flex justify-between items-center mb-5">
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400 mb-2">Warning</p>
+                        <h2 class="text-5xl font-extrabold text-yellow-500">{{ warning }}</h2>
+                    </div>
+                    <div class="w-16 h-16 bg-yellow-100 dark:bg-yellow-900 rounded-2xl flex items-center justify-center">
+                        <i class="fas fa-exclamation-triangle text-yellow-500 text-3xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl border border-red-100 dark:border-gray-700 hover:-translate-y-2 transition-all duration-300">
+                <div class="flex justify-between items-center mb-5">
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400 mb-2">Critical</p>
+                        <h2 class="text-5xl font-extrabold text-red-500">{{ critical }}</h2>
+                    </div>
+                    <div class="w-16 h-16 bg-red-100 dark:bg-red-900 rounded-2xl flex items-center justify-center">
+                        <i class="fas fa-radiation text-red-500 text-3xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid lg:grid-cols-3 gap-10">
+            <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Live Sensor Readings</h2>
+                    <span class="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-4 py-2 rounded-full text-sm font-semibold">Live</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b dark:border-gray-700 text-left">
+                                <th class="pb-4 text-gray-500 dark:text-gray-400">Cattle</th>
+                                <th class="pb-4 text-gray-500 dark:text-gray-400">Temperature</th>
+                                <th class="pb-4 text-gray-500 dark:text-gray-400">Heart Rate</th>
+                                <th class="pb-4 text-gray-500 dark:text-gray-400">Activity</th>
+                                <th class="pb-4 text-gray-500 dark:text-gray-400">Battery</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reading in recent_readings %}
+                            <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300">
+                                <td class="py-5 font-semibold text-gray-900 dark:text-white">{{ reading.cattle.cattle_id }}</td>
+                                <td class="py-5 text-gray-700 dark:text-gray-300">{{ reading.body_temperature }} °C</td>
+                                <td class="py-5 text-gray-700 dark:text-gray-300">{{ reading.heart_rate }} BPM</td>
+                                <td class="py-5">
+                                    <span class="px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-sm font-semibold">{{ reading.activity_level }}</span>
+                                </td>
+                                <td class="py-5 text-gray-700 dark:text-gray-300">{{ reading.battery_level_percent }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Alerts</h2>
+                    <i class="fas fa-bell text-yellow-500 text-2xl"></i>
+                </div>
+                <div class="space-y-6 max-h-[700px] overflow-y-auto">
+                    {% for alert in alerts %}
+                    <div class="border-l-4 border-red-500 bg-red-50 dark:bg-red-900/20 p-5 rounded-2xl">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-bold text-gray-900 dark:text-white">{{ alert.title }}</h3>
+                            <span class="text-xs px-3 py-1 rounded-full bg-red-100 text-red-600 font-semibold">{{ alert.severity }}</span>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm mb-3">{{ alert.description }}</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-500">{{ alert.cattle_id }}</p>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-10">
+                        <i class="fas fa-check-circle text-green-500 text-5xl mb-5"></i>
+                        <p class="text-gray-500 dark:text-gray-400 text-lg">No active alerts</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

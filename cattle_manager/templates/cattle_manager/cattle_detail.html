@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ cattle.name }}{% endblock %}
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950 py-12 px-4">
+    <div class="max-w-7xl mx-auto">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden mb-12">
+            <div class="bg-gradient-to-r from-green-500 via-green-600 to-blue-600 h-48 relative"></div>
+            <div class="px-10 pb-10 relative">
+                <div class="flex flex-col lg:flex-row lg:items-end gap-8 -mt-20">
+                    <div class="w-40 h-40 rounded-3xl overflow-hidden border-8 border-white dark:border-gray-800 shadow-2xl bg-white dark:bg-gray-800">
+                        {% if cattle.image %}
+                        <img src="{{ cattle.image }}" class="w-full h-full object-cover">
+                        {% else %}
+                        <div class="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-700">
+                            <i class="fas fa-cow text-6xl text-gray-400"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                            <div>
+                                <h1 class="text-5xl font-extrabold text-gray-900 dark:text-white mb-3">{{ cattle.name }}</h1>
+                                <p class="text-lg text-gray-600 dark:text-gray-400">{{ cattle.breed }} • {{ cattle.cattle_id }}</p>
+                            </div>
+                            <span class="px-6 py-3 rounded-2xl text-lg font-bold
+                                {% if cattle.health_status == 'healthy' %}
+                                    bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300
+                                {% elif cattle.health_status == 'warning' %}
+                                    bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300
+                                {% else %}
+                                    bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300
+                                {% endif %}">
+                                {{ cattle.health_status }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl text-center">
+                <i class="fas fa-temperature-high text-red-500 text-4xl mb-5"></i>
+                <h2 class="text-5xl font-extrabold text-gray-900 dark:text-white mb-2">{{ cattle.last_temperature }}</h2>
+                <p class="text-gray-500 dark:text-gray-400">Temperature °C</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl text-center">
+                <i class="fas fa-heartbeat text-pink-500 text-4xl mb-5"></i>
+                <h2 class="text-5xl font-extrabold text-gray-900 dark:text-white mb-2">{{ cattle.last_heart_rate }}</h2>
+                <p class="text-gray-500 dark:text-gray-400">Heart Rate BPM</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl text-center">
+                <i class="fas fa-running text-blue-500 text-4xl mb-5"></i>
+                <h2 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-2">{{ cattle.last_activity }}</h2>
+                <p class="text-gray-500 dark:text-gray-400">Activity Level</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl text-center">
+                <i class="fas fa-weight text-yellow-500 text-4xl mb-5"></i>
+                <h2 class="text-5xl font-extrabold text-gray-900 dark:text-white mb-2">{{ cattle.weight }}</h2>
+                <p class="text-gray-500 dark:text-gray-400">Weight KG</p>
+            </div>
+        </div>
+        <div class="grid lg:grid-cols-3 gap-10 mb-12">
+            <div class="lg:col-span-1 bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8">
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">Cattle Information</h2>
+                <div class="space-y-6">
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400 mb-1">Breed</p>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ cattle.breed }}</h3>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400 mb-1">Age</p>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ cattle.age }} Years</h3>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400 mb-1">Gender</p>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ cattle.gender }}</h3>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400 mb-1">Farm</p>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ cattle.farm.name }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8">
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">Recent Sensor Readings</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b dark:border-gray-700 text-left">
+                                <th class="pb-4 text-gray-500 dark:text-gray-400">Time</th>
+                                <th class="pb-4 text-gray-500 dark:text-gray-400">Temp</th>
+                                <th class="pb-4 text-gray-500 dark:text-gray-400">Heart</th>
+                                <th class="pb-4 text-gray-500 dark:text-gray-400">Steps</th>
+                                <th class="pb-4 text-gray-500 dark:text-gray-400">Battery</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reading in readings %}
+                            <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300">
+                                <td class="py-5 text-gray-700 dark:text-gray-300">{{ reading.timestamp }}</td>
+                                <td class="py-5 text-gray-700 dark:text-gray-300">{{ reading.body_temperature }} °C</td>
+                                <td class="py-5 text-gray-700 dark:text-gray-300">{{ reading.heart_rate }} BPM</td>
+                                <td class="py-5 text-gray-700 dark:text-gray-300">{{ reading.steps }}</td>
+                                <td class="py-5 text-gray-700 dark:text-gray-300">{{ reading.battery_level_percent }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Recent Alerts</h2>
+                <i class="fas fa-bell text-yellow-500 text-2xl"></i>
+            </div>
+            <div class="space-y-6">
+                {% for alert in alerts %}
+               <div class="border-l-4 border-red-500 bg-red-50 dark:bg-red-900/20 p-6 rounded-2xl">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="font-bold text-gray-900 dark:text-white text-lg">{{ alert.title }}</h3>
+                        <span class="px-3 py-1 rounded-full bg-red-100 text-red-600 text-sm font-semibold">{{ alert.severity }}</span>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 mb-3">{{ alert.description }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-500">{{ alert.created_at }}</p>
+                </div>
+                {% empty %}
+                <div class="text-center py-10">
+                    <i class="fas fa-check-circle text-green-500 text-6xl mb-5"></i>
+                    <p class="text-gray-500 dark:text-gray-400 text-lg">No alerts for this cattle.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

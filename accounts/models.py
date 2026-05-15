@@ -31,6 +31,8 @@ class MyAccountManager(BaseUserManager):
 class Account(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = (
         ('user', 'User'),
+        ('farmer', 'Farmer'),
+        ('cattle_manager', 'Cattle Manager'),
         ('author', 'Author'),
         ('moderator', 'Moderator'),
         ('manager', 'Manager'),
