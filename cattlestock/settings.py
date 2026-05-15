@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'hardware',
     'article',
     'cattle_manager',
+    'analytics_dashboard',
 ]
 
 MIDDLEWARE = [

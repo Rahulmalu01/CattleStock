@@ -36,3 +36,13 @@ class CattleProfile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return self.name
+    
+class FarmStaff(models.Model):
+    ROLE_CHOICES = (
+        ('farmer', 'Farmer'),
+        ('cattle_manager', 'Cattle Manager'),
+    )
+    user = models.ForeignKey('accounts.Account',on_delete=models.CASCADE)
+    farm = models.ForeignKey(Farm,on_delete=models.CASCADE)
+    role = models.CharField(max_length=30,choices=ROLE_CHOICES)
+    assigned_at = models.DateTimeField(auto_now_add=True)

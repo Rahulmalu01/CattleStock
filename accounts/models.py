@@ -43,7 +43,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=60)
     phone = models.CharField(max_length=15)
     location = models.CharField(max_length=100)
-    role = models.CharField(max_length=20,choices=ROLE_CHOICES,default='user')
+    role = models.CharField(max_length=30,choices=ROLE_CHOICES,default='user')
     approver_post = models.CharField(max_length=100,blank=True,null=True)
     email_verified = models.BooleanField(default=False)
     phone_verified = models.BooleanField(default=False)

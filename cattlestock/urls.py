@@ -27,6 +27,7 @@ urlpatterns = [
     path('article/', include('article.urls')),
     path('api/hardware/', include('hardware.urls')),
     path('dashboard/', include('cattle_manager.urls')),
+    path('analytics/', include('analytics_dashboard.urls')),
 ]
 
 if settings.DEBUG:

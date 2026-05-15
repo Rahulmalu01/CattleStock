@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block title %}Analytics Dashboard{% endblock %}
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div class="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950 p-8">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-12">
+            <div>
+                <h1 class="text-5xl font-extrabold text-gray-900 dark:text-white mb-4">Analytics Dashboard</h1>
+                <p class="text-lg text-gray-600 dark:text-gray-400">AI-powered cattle monitoring and sensor analytics</p>
+            </div>
+            <a href="{% url 'device_diagnostics' %}" class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-4 rounded-2xl shadow-2xl hover:scale-105 transition-all duration-300">
+                <i class="fas fa-microchip mr-2"></i>
+                Device Diagnostics
+            </a>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center">
+                <h2 class="text-5xl font-extrabold text-green-600 mb-3">{{ total_cattle }}</h2>
+                <p class="text-gray-500 dark:text-gray-400">Total Cattle</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center">
+                <h2 class="text-5xl font-extrabold text-blue-500 mb-3">{{ total_readings }}</h2>
+                <p class="text-gray-500 dark:text-gray-400">Sensor Readings</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center">
+                <h2 class="text-5xl font-extrabold text-red-500 mb-3">{{ avg_temp }}°C</h2>
+                <p class="text-gray-500 dark:text-gray-400">Avg Temp</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center">
+                <h2 class="text-5xl font-extrabold text-pink-500 mb-3">{{ avg_heart_rate }}</h2>
+                <p class="text-gray-500 dark:text-gray-400">Avg Heart Rate</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center">
+                <h2 class="text-5xl font-extrabold text-yellow-500 mb-3">{{ avg_milk }}L</h2>
+                <p class="text-gray-500 dark:text-gray-400">Avg Milk</p>
+            </div>
+        </div>
+        <div class="grid lg:grid-cols-5 gap-8 mb-12">
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center">
+                <h2 class="text-5xl font-extrabold text-purple-500 mb-3">{{ ai_health_score }}%</h2>
+                <p class="text-gray-500 dark:text-gray-400">AI Health Score</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center">
+                <h2 class="text-5xl font-extrabold text-red-500 mb-3">{{ high_temp_count }}</h2>
+                <p class="text-gray-500 dark:text-gray-400">High Temp Alerts</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center">
+                <h2 class="text-5xl font-extrabold text-yellow-500 mb-3">{{ low_activity_count }}</h2>
+                <p class="text-gray-500 dark:text-gray-400">Low Activity</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center">
+                <h2 class="text-5xl font-extrabold text-pink-500 mb-3">{{ abnormal_heart_rate }}</h2>
+                <p class="text-gray-500 dark:text-gray-400">Heart Anomalies</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center">
+                <h2 class="text-5xl font-extrabold text-orange-500 mb-3">{{ critical_battery_count }}</h2>
+                <p class="text-gray-500 dark:text-gray-400">Critical Devices</p>
+            </div>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-10 mb-10">
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Temperature History</h2>
+                <canvas id="temperatureChart"></canvas>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Heart Rate Trend</h2>
+                <canvas id="heartChart"></canvas>
+            </div>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-10 mb-10">
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Activity Distribution</h2>
+                <canvas id="activityChart"></canvas>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Milk Analytics</h2>
+                <canvas id="milkChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+const labels = {{ temp_labels|safe }};
+new Chart(document.getElementById('temperatureChart'), {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Temperature °C',
+            data: {{ temp_values|safe }},
+            borderWidth: 3,
+            tension: 0.4,
+        }]
+    }
+});
+new Chart(document.getElementById('heartChart'), {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Heart Rate',
+            data: {{ heart_values|safe }},
+            borderWidth: 3,
+            tension: 0.4,
+        }]
+    }
+});
+new Chart(document.getElementById('activityChart'), {
+    type: 'doughnut',
+    data: {
+        labels: {{ activity_labels|safe }},
+        datasets: [{
+            data: {{ activity_values|safe }},
+        }]
+    }
+});
+new Chart(document.getElementById('milkChart'), {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Milk Yield',
+            data: {{ milk_values|safe }},
+            borderWidth: 2,
+        }]
+    }
+});
+</script>
+{% endblock %}
