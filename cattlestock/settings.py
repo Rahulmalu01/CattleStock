@@ -15,18 +15,14 @@ import os
 from dotenv import load_dotenv
 from decouple import config
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
+# SECURITY 
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-fallback-key")
 MONGO_URI = config('MONGO_URI')
+HARDWARE_API_KEY = config('HARDWARE_API_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 # ALLOWED_HOSTS = config(
@@ -41,6 +37,7 @@ CSRF_TRUSTED_ORIGINS = config(
 )
 CSRF_COOKIE_SECURE = True
 AUTH_USER_MODEL = 'accounts.Account'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -51,9 +48,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
+    #Inbuild functions
+    'rest_framework',
+    
     #Personal App
     'home',
     'accounts',
+    'hardware',
     'article'
 ]
 
@@ -77,6 +78,7 @@ TEMPLATES = [
             BASE_DIR / 'home' / 'templates',
             BASE_DIR / 'accounts' / 'templates',
             BASE_DIR / 'article' / 'templates',
+            BASE_DIR / 'hardware' / 'templates',
         ],
         "APP_DIRS": True,
         "OPTIONS": {
