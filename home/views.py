@@ -58,7 +58,5 @@ def chatbot_api(request):
             response = 'Normal cattle heart rate ranges from 60 to 80 BPM.'
         else:
             response = 'I am here to help with cattle monitoring, analytics, alerts, and smart farming.'
-        return JsonResponse({
-            'response': response
-        })
+        return JsonResponse({'response': response})
     
