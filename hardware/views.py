@@ -6,6 +6,7 @@ from django.utils.dateparse import parse_datetime
 from django.conf import settings
 from .models import (Device, Cattle, SensorReading)
 from cattlestock.mongodb import alerts_collection
+from django.utils import timezone
 
 @csrf_exempt
 def sensor_data_api(request):
@@ -42,7 +43,7 @@ def sensor_data_api(request):
         SensorReading.objects.create(
             device=device,
             cattle=cattle,
-            timestamp=parse_datetime(data['timestamp']),
+            timestamp=timezone.now(),
             body_temperature=vital['body_temperature'],
             heart_rate=vital['heart_rate'],
             respiratory_rate=vital['respiratory_rate'],
