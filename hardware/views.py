@@ -2,11 +2,14 @@ import json
 from datetime import datetime
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.utils.dateparse import parse_datetime
 from django.conf import settings
-from .models import (Device, Cattle, SensorReading)
+from hardware.models import Device, Cattle, SensorReading
+from cattle_manager.models import CattleProfile
 from cattlestock.mongodb import alerts_collection
 from django.utils import timezone
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+from prediction.tasks import create_prediction
 
 @csrf_exempt
 def sensor_data_api(request):
@@ -40,7 +43,7 @@ def sensor_data_api(request):
         feeding = readings['feeding']
         device_status = data['device_status']
         quality = data['data_quality']
-        SensorReading.objects.create(
+        sensor_reading = SensorReading.objects.create(
             device=device,
             cattle=cattle,
             timestamp=timezone.now(),
@@ -68,6 +71,59 @@ def sensor_data_api(request):
             data_points_received=quality['data_points_received'],
             data_points_expected=quality['data_points_expected'],
         )
+
+        try:
+            create_prediction(cattle,sensor_reading)
+        except Exception as prediction_error:
+            print(f"Prediction Error: {prediction_error}")
+
+        health_status = 'healthy'
+        if vital['body_temperature'] >= 40 or vital['heart_rate'] > 100 or activity['activity_level'] == 'low' or device_status['battery_level_percent'] < 20:
+            health_status = 'warning'
+        if vital['body_temperature'] >= 41 or vital['heart_rate'] > 110 or device_status['battery_level_percent'] < 10:
+            health_status = 'critical'
+
+        CattleProfile.objects.filter(cattle_id=cattle_data['cattle_id']).update(
+            last_temperature=vital['body_temperature'],
+            last_heart_rate=vital['heart_rate'],
+            last_activity=activity['activity_level'],
+            health_status=health_status,
+        )
+
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            'monitoring',
+            {
+                'type': 'sensor_update',
+                'data': {
+                    'cattle_id': cattle_data['cattle_id'],
+                    'rfid_tag': cattle_data['rfid_tag'],
+                    'temperature': vital['body_temperature'],
+                    'heart_rate': vital['heart_rate'],
+                    'activity_level': activity['activity_level'],
+                    'battery': device_status['battery_level_percent'],
+                    'timestamp': timezone.now().isoformat(),
+                }
+            }
+        )
+
+        total_cattle = CattleProfile.objects.count()
+        healthy = CattleProfile.objects.filter(health_status='healthy').count()
+        warning = CattleProfile.objects.filter(health_status='warning').count()
+        critical = CattleProfile.objects.filter(health_status='critical').count()
+        async_to_sync(channel_layer.group_send)(
+            'monitoring',
+            {
+                'type': 'status_update',
+                'data': {
+                    'total_cattle': total_cattle,
+                    'healthy': healthy,
+                    'warning': warning,
+                    'critical': critical,
+                }
+            }
+        )
+
         return JsonResponse({
             'success': True,
             'message': 'Sensor data stored successfully'
@@ -89,6 +145,22 @@ def alert_api(request):
         data = json.loads(request.body)
         data['received_at'] = datetime.utcnow()
         alerts_collection.insert_one(data)
+
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            'monitoring',
+            {
+                'type': 'alert_update',
+                'data': {
+                    'title': data.get('title', 'Alert'),
+                    'description': data.get('description', ''),
+                    'severity': data.get('severity', 'medium'),
+                    'cattle_id': data.get('cattle_id'),
+                    'created_at': data['received_at'].isoformat(),
+                }
+            }
+        )
+
         return JsonResponse({
             'success': True,
             'message': 'Alert stored successfully'

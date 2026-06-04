@@ -1,13 +1,20 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import TeamMember
-from .models import Contact
+from home.models import TeamMember
+from home.models import Contact
+from cattle_manager.models import CattleProfile
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 def home(request):
-    context = {}
+    total_cattle = CattleProfile.objects.count()
+    # total_farms = CattleProfile.objects.values('farm_name').distinct().count()
+    total_farms = 0
+    context = {
+        'total_cattle': total_cattle,
+        'total_farms': total_farms,
+    }
     return render(request, 'home/index.html', context)
 
 def about(request):

@@ -1,12 +1,11 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
-
-const char* ssid = "Rahul HomeG";
-const char* password = "Airtel@123";
+const char* ssid = "Rahul Home";
+const char* password = "nahipatta";
 
 // CHANGE THIS TO YOUR PC'S IP ADDRESS
 const char* API_URL =
-"http://192.168.0.103:8000/api/hardware/sensor-data/";
+"http://192.168.0.101:8000/api/hardware/sensor-data/";
 
 const char* API_KEY =
 "cattlecare-hardware-bv7trywqe9ryncwp8%$&rbrieu2uh&{eu";

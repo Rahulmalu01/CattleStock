@@ -16,11 +16,11 @@
         </div>
         <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
             <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center">
-                <h2 class="text-5xl font-extrabold text-green-600 mb-3">{{ total_cattle }}</h2>
+                <h2 id="total_cattle" class="text-5xl font-extrabold text-green-600 mb-3">{{ total_cattle }}</h2>
                 <p class="text-gray-500 dark:text-gray-400">Total Cattle</p>
             </div>
             <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center">
-                <h2 class="text-5xl font-extrabold text-blue-500 mb-3">{{ total_readings }}</h2>
+                <h2 id="total_readings" class="text-5xl font-extrabold text-blue-500 mb-3">{{ total_readings }}</h2>
                 <p class="text-gray-500 dark:text-gray-400">Sensor Readings</p>
             </div>
             <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center">
@@ -38,24 +38,44 @@
         </div>
         <div class="grid lg:grid-cols-5 gap-8 mb-12">
             <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center">
-                <h2 class="text-5xl font-extrabold text-purple-500 mb-3">{{ ai_health_score }}%</h2>
+                <h2 id="ai_health_score" class="text-5xl font-extrabold text-purple-500 mb-3">{{ ai_health_score }}%</h2>
                 <p class="text-gray-500 dark:text-gray-400">AI Health Score</p>
             </div>
             <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center">
-                <h2 class="text-5xl font-extrabold text-red-500 mb-3">{{ high_temp_count }}</h2>
+                <h2 id="high_temp_count" class="text-5xl font-extrabold text-red-500 mb-3">{{ high_temp_count }}</h2>
                 <p class="text-gray-500 dark:text-gray-400">High Temp Alerts</p>
             </div>
             <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center">
-                <h2 class="text-5xl font-extrabold text-yellow-500 mb-3">{{ low_activity_count }}</h2>
+                <h2 id="low_activity_count" class="text-5xl font-extrabold text-yellow-500 mb-3">{{ low_activity_count }}</h2>
                 <p class="text-gray-500 dark:text-gray-400">Low Activity</p>
             </div>
             <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center">
-                <h2 class="text-5xl font-extrabold text-pink-500 mb-3">{{ abnormal_heart_rate }}</h2>
+                <h2 id="abnormal_heart_rate" class="text-5xl font-extrabold text-pink-500 mb-3">{{ abnormal_heart_rate }}</h2>
                 <p class="text-gray-500 dark:text-gray-400">Heart Anomalies</p>
             </div>
             <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 text-center">
-                <h2 class="text-5xl font-extrabold text-orange-500 mb-3">{{ critical_battery_count }}</h2>
+                <h2 id="critical_battery_count" class="text-5xl font-extrabold text-orange-500 mb-3">{{ critical_battery_count }}</h2>
                 <p class="text-gray-500 dark:text-gray-400">Critical Devices</p>
+            </div>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-10 mb-10">
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Live Sensor Stream</h2>
+                    <span class="text-sm font-semibold text-green-700 dark:text-green-300">Real-time</span>
+                </div>
+                <div id="live-sensor-feed" class="space-y-4 max-h-96 overflow-y-auto">
+                    <p class="text-gray-500 dark:text-gray-400">Waiting for live sensor updates...</p>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Live Alerts</h2>
+                    <span class="text-sm font-semibold text-red-700 dark:text-red-300">Instant</span>
+                </div>
+                <div id="live-alert-feed" class="space-y-4 max-h-96 overflow-y-auto">
+                    <p class="text-gray-500 dark:text-gray-400">Waiting for live alerts...</p>
+                </div>
             </div>
         </div>
         <div class="grid lg:grid-cols-2 gap-10 mb-10">
@@ -126,5 +146,80 @@ new Chart(document.getElementById('milkChart'), {
         }]
     }
 });
+</script>
+<script>
+(function () {
+    const wsScheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const socket = new WebSocket(`${wsScheme}://${window.location.host}/ws/monitoring/`);
+    const sensorFeed = document.getElementById('live-sensor-feed');
+    const alertFeed = document.getElementById('live-alert-feed');
+
+    function createSensorItem(reading) {
+        const item = document.createElement('div');
+        item.className = 'border border-gray-200 dark:border-gray-700 rounded-3xl p-4 bg-gray-50 dark:bg-gray-900';
+        item.innerHTML = `
+            <div class="flex justify-between items-center mb-2">
+                <p class="font-semibold text-gray-900 dark:text-white">${reading.cattle_id}</p>
+                <span class="text-xs px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300">${reading.activity_level}</span>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Temp: ${reading.temperature}°C · HR: ${reading.heart_rate} BPM · Battery: ${reading.battery}%</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">${new Date(reading.timestamp).toLocaleTimeString()}</p>
+        `;
+        return item;
+    }
+
+    function createAlertItem(alert) {
+        const item = document.createElement('div');
+        item.className = 'border-l-4 border-red-500 bg-red-50 dark:bg-red-900/20 p-4 rounded-3xl';
+        item.innerHTML = `
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="font-bold text-gray-900 dark:text-white">${alert.title}</h3>
+                <span class="text-xs px-3 py-1 rounded-full bg-red-100 dark:bg-red-800 text-red-600 dark:text-red-200">${alert.severity}</span>
+            </div>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">${alert.description}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">${alert.cattle_id} · ${new Date(alert.created_at).toLocaleTimeString()}</p>
+        `;
+        return item;
+    }
+
+    function updateStatus(payload) {
+        const map = {
+            total_cattle: 'total_cattle',
+            healthy: 'healthy',
+            warning: 'low_activity_count',
+            critical: 'critical_battery_count',
+        };
+        Object.entries(payload).forEach(([key, value]) => {
+            const el = document.getElementById(map[key] || key);
+            if (el) el.textContent = value;
+        });
+    }
+
+    socket.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+        if (data.event === 'sensor_update') {
+            if (sensorFeed) {
+                sensorFeed.prepend(createSensorItem(data.payload));
+                if (sensorFeed.children.length > 8) sensorFeed.removeChild(sensorFeed.lastChild);
+            }
+        }
+        if (data.event === 'alert_update') {
+            if (alertFeed) {
+                alertFeed.prepend(createAlertItem(data.payload));
+                if (alertFeed.children.length > 8) alertFeed.removeChild(alertFeed.lastChild);
+            }
+        }
+        if (data.event === 'status_update') {
+            updateStatus(data.payload);
+        }
+    };
+
+    socket.onopen = function () {
+        console.info('Realtime monitoring socket connected.');
+    };
+    socket.onclose = function () {
+        console.warn('Realtime monitoring socket disconnected.');
+    };
+})();
 </script>
 {% endblock %}

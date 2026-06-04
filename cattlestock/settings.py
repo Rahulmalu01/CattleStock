@@ -58,6 +58,8 @@ INSTALLED_APPS = [
     'article',
     'cattle_manager',
     'analytics_dashboard',
+    'channels',
+    'prediction',
 ]
 
 MIDDLEWARE = [
@@ -94,7 +96,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "cattlestock.wsgi.application"
+ASGI_APPLICATION = "cattlestock.asgi.application"
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
@@ -146,3 +154,5 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+PREDICTION_API_URL = config('PREDICTION_API_URL')

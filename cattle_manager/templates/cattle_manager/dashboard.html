@@ -25,7 +25,7 @@
                 <div class="flex justify-between items-center mb-5">
                     <div>
                         <p class="text-gray-500 dark:text-gray-400 mb-2">Total Cattle</p>
-                        <h2 class="text-5xl font-extrabold text-green-600">{{ total_cattle }}</h2>
+                        <h2 id="total_cattle" class="text-5xl font-extrabold text-green-600">{{ total_cattle }}</h2>
                     </div>
                     <div class="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-2xl flex items-center justify-center">
                         <i class="fas fa-cow text-green-600 text-3xl"></i>
@@ -36,7 +36,7 @@
                 <div class="flex justify-between items-center mb-5">
                     <div>
                         <p class="text-gray-500 dark:text-gray-400 mb-2">Healthy</p>
-                        <h2 class="text-5xl font-extrabold text-green-500">{{ healthy }}</h2>
+                        <h2 id="healthy" class="text-5xl font-extrabold text-green-500">{{ healthy }}</h2>
                     </div>
                     <div class="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-2xl flex items-center justify-center">
                         <i class="fas fa-heartbeat text-green-500 text-3xl"></i>
@@ -47,7 +47,7 @@
                 <div class="flex justify-between items-center mb-5">
                     <div>
                         <p class="text-gray-500 dark:text-gray-400 mb-2">Warning</p>
-                        <h2 class="text-5xl font-extrabold text-yellow-500">{{ warning }}</h2>
+                        <h2 id="warning" class="text-5xl font-extrabold text-yellow-500">{{ warning }}</h2>
                     </div>
                     <div class="w-16 h-16 bg-yellow-100 dark:bg-yellow-900 rounded-2xl flex items-center justify-center">
                         <i class="fas fa-exclamation-triangle text-yellow-500 text-3xl"></i>
@@ -58,7 +58,7 @@
                 <div class="flex justify-between items-center mb-5">
                     <div>
                         <p class="text-gray-500 dark:text-gray-400 mb-2">Critical</p>
-                        <h2 class="text-5xl font-extrabold text-red-500">{{ critical }}</h2>
+                        <h2 id="critical" class="text-5xl font-extrabold text-red-500">{{ critical }}</h2>
                     </div>
                     <div class="w-16 h-16 bg-red-100 dark:bg-red-900 rounded-2xl flex items-center justify-center">
                         <i class="fas fa-radiation text-red-500 text-3xl"></i>
@@ -83,7 +83,7 @@
                                 <th class="pb-4 text-gray-500 dark:text-gray-400">Battery</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="sensor-rows">
                             {% for reading in recent_readings %}
                             <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300">
                                 <td class="py-5 font-semibold text-gray-900 dark:text-white">{{ reading.cattle.cattle_id }}</td>
@@ -104,7 +104,7 @@
                     <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Alerts</h2>
                     <i class="fas fa-bell text-yellow-500 text-2xl"></i>
                 </div>
-                <div class="space-y-6 max-h-[700px] overflow-y-auto">
+                <div id="alerts-container" class="space-y-6 max-h-[700px] overflow-y-auto">
                     {% for alert in alerts %}
                     <div class="border-l-4 border-red-500 bg-red-50 dark:bg-red-900/20 p-5 rounded-2xl">
                         <div class="flex justify-between items-center mb-3">
@@ -125,4 +125,78 @@
         </div>
     </div>
 </div>
+<script>
+(function () {
+    const wsScheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const socket = new WebSocket(`${wsScheme}://${window.location.host}/ws/monitoring/`);
+    const sensorRows = document.getElementById('sensor-rows');
+    const alertsContainer = document.getElementById('alerts-container');
+
+    function createSensorRow(reading) {
+        const row = document.createElement('tr');
+        row.className = 'border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300';
+        row.innerHTML = `
+            <td class="py-5 font-semibold text-gray-900 dark:text-white">${reading.cattle_id}</td>
+            <td class="py-5 text-gray-700 dark:text-gray-300">${reading.temperature} °C</td>
+            <td class="py-5 text-gray-700 dark:text-gray-300">${reading.heart_rate} BPM</td>
+            <td class="py-5"><span class="px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-sm font-semibold">${reading.activity_level}</span></td>
+            <td class="py-5 text-gray-700 dark:text-gray-300">${reading.battery}%</td>
+        `;
+        return row;
+    }
+
+    function createAlertCard(alert) {
+        const card = document.createElement('div');
+        card.className = 'border-l-4 border-red-500 bg-red-50 dark:bg-red-900/20 p-5 rounded-2xl';
+        card.innerHTML = `
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="font-bold text-gray-900 dark:text-white">${alert.title}</h3>
+                <span class="text-xs px-3 py-1 rounded-full bg-red-100 text-red-600 font-semibold">${alert.severity}</span>
+            </div>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-3">${alert.description}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-500">${alert.cattle_id}</p>
+        `;
+        return card;
+    }
+
+    function updateCounts(payload) {
+        const map = {
+            total_cattle: 'total_cattle',
+            healthy: 'healthy',
+            warning: 'warning',
+            critical: 'critical',
+        };
+        Object.entries(payload).forEach(([key, value]) => {
+            const el = document.getElementById(map[key]);
+            if (el) el.textContent = value;
+        });
+    }
+
+    socket.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+        if (data.event === 'sensor_update' && sensorRows) {
+            sensorRows.prepend(createSensorRow(data.payload));
+            if (sensorRows.children.length > 12) {
+                sensorRows.removeChild(sensorRows.lastChild);
+            }
+        }
+        if (data.event === 'alert_update' && alertsContainer) {
+            alertsContainer.prepend(createAlertCard(data.payload));
+            if (alertsContainer.children.length > 10) {
+                alertsContainer.removeChild(alertsContainer.lastChild);
+            }
+        }
+        if (data.event === 'status_update') {
+            updateCounts(data.payload);
+        }
+    };
+
+    socket.onopen = function () {
+        console.info('Realtime monitoring socket connected.');
+    };
+    socket.onclose = function () {
+        console.warn('Realtime monitoring socket disconnected.');
+    };
+})();
+</script>
 {% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Disease Predictions{% endblock %}
+{% block content %}
+<div class="max-w-7xl mx-auto px-6 py-10">
+    <h1 class="text-4xl font-bold mb-8">Disease Predictions</h1>
+    <div class="grid gap-6">
+        {% for prediction in predictions %}
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+            <div class="flex justify-between">
+                <div>
+                    <h2 class="text-xl font-bold"> {{ prediction.cattle }} </h2>
+                    <p>
+                        Disease:
+                        <span class="font-semibold">{{ prediction.disease }}</span>
+                    </p>
+                    <p>Confidence: {{ prediction.confidence }}%</p>
+                    <p>Risk: {{ prediction.risk_level }}</p>
+                    <p>{{ prediction.recommendation }}</p>
+                </div>
+                <div>{{ prediction.created_at }}</div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl">No predictions available.</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
