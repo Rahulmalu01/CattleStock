@@ -9,8 +9,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 def home(request):
     total_cattle = CattleProfile.objects.count()
-    # total_farms = CattleProfile.objects.values('farm_name').distinct().count()
-    total_farms = 0
+    total_farms = CattleProfile.objects.values('farm').distinct().count()
+    # total_farms = 0
     context = {
         'total_cattle': total_cattle,
         'total_farms': total_farms,
@@ -66,4 +66,11 @@ def chatbot_api(request):
         else:
             response = 'I am here to help with cattle monitoring, analytics, alerts, and smart farming.'
         return JsonResponse({'response': response})
-    
+
+def subscribe(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        # Here you would typically save the email to your database or mailing list
+        messages.success(request, "Thank you for subscribing! You'll receive updates from us.")
+        return redirect('home')
+    return redirect('home')

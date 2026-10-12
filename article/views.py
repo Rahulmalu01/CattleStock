@@ -1,3 +1,6 @@
+from functools import lru_cache
+
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from bson.objectid import ObjectId
@@ -14,15 +17,32 @@ from cattlestock.mongodb import (
     comments_collection,
 )
 
-article_collection.create_index([
-    ('title', TEXT),
-    ('content', TEXT),
-    ('category', TEXT),
-])
+@lru_cache(maxsize=1)
+def _ensure_article_text_index():
+    return article_collection.create_index([
+        ('title', TEXT),
+        ('content', TEXT),
+        ('category', TEXT),
+    ])
+
+
+def _get_article_or_404(article_id, status=None):
+    if not ObjectId.is_valid(article_id):
+        raise Http404
+
+    query = {'_id': ObjectId(article_id)}
+    if status is not None:
+        query['status'] = status
+
+    article = article_collection.find_one(query)
+    if article is None:
+        raise Http404
+    return article
 
 def article_list(request):
     query = request.GET.get('q')
     if query:
+        _ensure_article_text_index()
         article = list(
             article_collection.find({
                 '$text': {'$search': query},
@@ -39,10 +59,7 @@ def article_list(request):
     })
 
 def article_detail(request, article_id):
-    article = article_collection.find_one({
-        '_id': ObjectId(article_id),
-        'status': 'approved'
-    })
+    article = _get_article_or_404(article_id, status='approved')
     likes_count = likes_collection.count_documents({'article_id': article_id})
     comments = list(
         comments_collection.find({'article_id': article_id}).sort('created_at', -1)
@@ -80,7 +97,7 @@ def create_article(request):
 
 @login_required
 def edit_article(request, article_id):
-    article = article_collection.find_one({'_id': ObjectId(article_id)})
+    article = _get_article_or_404(article_id)
     if article['author'] != request.user.username:
         return redirect('article')
     if request.method == 'POST':
@@ -101,7 +118,7 @@ def edit_article(request, article_id):
 
 @login_required
 def user_delete_article(request, article_id):
-    article = article_collection.find_one({'_id': ObjectId(article_id)})
+    article = _get_article_or_404(article_id)
     if article['author'] == request.user.username:
         article_collection.delete_one({'_id': ObjectId(article_id)})
     return redirect('article')
@@ -115,8 +132,9 @@ def moderation_dashboard(request):
 
 @moderator_required
 def approve_article(request, article_id):
+    article = _get_article_or_404(article_id)
     article_collection.update_one(
-        {'_id': ObjectId(article_id)},
+        {'_id': article['_id']},
         {
             '$set': {
                 'status': 'approved',
@@ -129,8 +147,9 @@ def approve_article(request, article_id):
 
 @moderator_required
 def reject_article(request, article_id):
+    article = _get_article_or_404(article_id)
     article_collection.update_one(
-        {'_id': ObjectId(article_id)},
+        {'_id': article['_id']},
         {
             '$set': {
                 'status': 'rejected'

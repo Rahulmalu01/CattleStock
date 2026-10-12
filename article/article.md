@@ -208,6 +208,10 @@ Supports:
 * Tag filtering
 
 MongoDB Full-Text Search is used.
+The text index is created the first time an article search is requested, rather
+than during Django startup.
+
+Malformed and missing article IDs return a not-found response.
 
 ---
 
